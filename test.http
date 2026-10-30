@@ -1,0 +1,114 @@
+### 1. Transaction valide (250 EUR sur CUST-001)
+POST http://localhost:8082/api/transactions
+Content-Type: application/json
+
+{
+  "accountId": "d54685ce-402e-4fba-9d80-faf83b179e15",
+  "amount": 250.00,
+  "currency": "EUR",
+  "merchantCategory": "GROCERY",
+  "country": "MA"
+}
+
+### 2. Montant au-dessus du plafond de 1000 (attendu : 400)
+POST http://localhost:8082/api/transactions
+Content-Type: application/json
+
+{
+  "accountId": "d54685ce-402e-4fba-9d80-faf83b179e15",
+  "amount": 5000,
+  "currency": "EUR"
+}
+
+### 3. Mauvaise devise (attendu : 400)
+POST http://localhost:8082/api/transactions
+Content-Type: application/json
+
+{
+  "accountId": "d54685ce-402e-4fba-9d80-faf83b179e15",
+  "amount": 10,
+  "currency": "USD"
+}
+
+### 4. Compte bloqué CUST-003 (attendu : 400)
+POST http://localhost:8082/api/transactions
+Content-Type: application/json
+
+{
+  "accountId": "982085d3-a518-4fb9-b3d1-88c6d7eb0688",
+  "amount": 10,
+  "currency": "USD"
+}
+
+### 5. Compte inexistant (attendu : 404)
+POST http://localhost:8082/api/transactions
+Content-Type: application/json
+
+{
+  "accountId": "00000000-0000-0000-0000-000000000000",
+  "amount": 10,
+  "currency": "EUR"
+}
+
+### 6. Montant négatif (attendu : 400)
+POST http://localhost:8082/api/transactions
+Content-Type: application/json
+
+{
+  "accountId": "d54685ce-402e-4fba-9d80-faf83b179e15",
+  "amount": -50,
+  "currency": "EUR"
+}
+
+### 7. Virement CUST-001 vers CUST-002 (100 EUR)
+POST http://localhost:8082/api/transactions/transfer
+Content-Type: application/json
+
+{
+  "fromAccountId": "d54685ce-402e-4fba-9d80-faf83b179e15",
+  "toAccountId": "0a2616a6-884c-4bc3-ade5-d1da1bed1b43",
+  "amount": 100,
+  "currency": "EUR"
+}
+
+### 8. Virement vers le même compte (attendu : 400)
+POST http://localhost:8082/api/transactions/transfer
+Content-Type: application/json
+
+{
+  "fromAccountId": "d54685ce-402e-4fba-9d80-faf83b179e15",
+  "toAccountId": "d54685ce-402e-4fba-9d80-faf83b179e15",
+  "amount": 100,
+  "currency": "EUR"
+}
+
+### 1. Transaction valide
+POST http://localhost:8082/api/transactions
+Content-Type: application/json
+
+{
+  "accountId": "d54685ce-402e-4fba-9d80-faf83b179e15",
+  "amount": 250.00,
+  "currency": "EUR",
+  "merchantCategory": "GROCERY",
+  "country": "MA"
+}
+### 9. Historique des transactions
+GET http://localhost:8082/api/transactions
+
+### 10. Transactions d'un compte
+GET http://localhost:8082/api/transactions/account/d54685ce-402e-4fba-9d80-faf83b179e15
+
+### 11. Soldes mis à jour (account-service)
+GET http://localhost:8081/api/accounts
+### Transaction valide
+POST http://localhost:8082/api/transactions
+Content-Type: application/json
+
+{
+  "accountId": "d3959d01-fb01-40c0-8518-cb62d83bfac0",
+  "amount": 250.00,
+  "currency": "EUR",
+  "merchantCategory": "GROCERY",
+  "country": "MA"
+}
